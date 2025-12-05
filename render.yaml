@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: eshop
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production

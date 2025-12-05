@@ -1,0 +1,15 @@
+# Build artifacts
+bin/
+obj/
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+# Local database
+*.db
+
+# Environment files
+.env
+appsettings.Development.json

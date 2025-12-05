@@ -54,7 +54,7 @@ public class ShopDbContext : IdentityDbContext<ApplicationUser>
             entity.Property(o => o.CustomerName).IsRequired();
             entity.Property(o => o.CustomerEmail).IsRequired();
             entity.Property(o => o.CreatedAt)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(o => o.TotalAmount).HasPrecision(18, 2);
         });
 

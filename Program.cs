@@ -7,12 +7,21 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Connection string falls back to provided SQL Server instance if none supplied in configuration.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=localhost;Database=QuizDB;User Id=admin;Password=admin;Encrypt=True;TrustServerCertificate=True;";
+// Use DATABASE_URL environment variable for production (Render), or SQLite for local dev
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-builder.Services.AddDbContext<ShopDbContext>(options =>
-    options.UseSqlServer(connectionString));
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    // Production: PostgreSQL via environment variable
+    builder.Services.AddDbContext<ShopDbContext>(options =>
+        options.UseNpgsql(databaseUrl));
+}
+else
+{
+    // Local development: SQLite
+    builder.Services.AddDbContext<ShopDbContext>(options =>
+        options.UseSqlite("Data Source=eshop.db"));
+}
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => 
 {
@@ -49,17 +58,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
-    var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
-
-    if (pendingMigrations.Any())
-    {
-        await context.Database.MigrateAsync();
-    }
-    else
-    {
-        await context.Database.EnsureCreatedAsync();
-    }
-
+    await context.Database.EnsureCreatedAsync();
     await DbInitializer.SeedAsync(context);
 }
 
