@@ -1,0 +1,40 @@
+@model EShopOnWeb.Models.Order
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<h1>Order #@Model.Id</h1>
+<p class="text-muted">Placed on @Model.CreatedAt.ToLocalTime().ToString("f")</p>
+
+<div class="mb-3">
+    <strong>Customer:</strong> @Model.CustomerName<br />
+    <strong>Email:</strong> @Model.CustomerEmail
+</div>
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Product?.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.UnitPrice.ToString("C")</td>
+                    <td>@(item.UnitPrice * item.Quantity).ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<h4>Total: @Model.TotalAmount.ToString("C")</h4>
+
+<a class="btn btn-primary" asp-controller="Products" asp-action="Index">Keep Shopping</a>

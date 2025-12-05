@@ -1,0 +1,27 @@
+@model EShopOnWeb.ViewModels.CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h1>Checkout</h1>
+<p class="text-muted">Enter your details to place the order.</p>
+
+<form asp-action="Checkout" method="post" class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="CustomerName" class="form-label"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="CustomerEmail" class="form-label"></label>
+        <input asp-for="CustomerEmail" class="form-control" />
+        <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Place Order</button>
+        <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">Back to Cart</a>
+    </div>
+</form>
+
+<partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
