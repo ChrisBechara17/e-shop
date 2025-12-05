@@ -32,10 +32,25 @@ public class OrdersController : Controller
     }
 
     [HttpGet]
-    public IActionResult Checkout()
+    public async Task<IActionResult> Checkout()
     {
         ViewBag.StripePublishableKey = _configuration["Stripe:PublishableKey"];
-        return View(new CheckoutViewModel());
+        
+        var model = new CheckoutViewModel();
+        
+        // Pre-fill with logged-in user's info
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            if (user != null)
+            {
+                var appUser = user as ApplicationUser;
+                model.CustomerName = appUser?.FullName ?? user.UserName ?? "";
+                model.CustomerEmail = user.Email ?? "";
+            }
+        }
+        
+        return View(model);
     }
 
     [HttpPost]
