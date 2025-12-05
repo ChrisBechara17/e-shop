@@ -3,25 +3,72 @@
     ViewData["Title"] = "Checkout";
 }
 
-<h1>Checkout</h1>
-<p class="text-muted">Enter your details to place the order.</p>
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-premium mb-4">
+        <span class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item"><a asp-controller="Cart" asp-action="Index">Cart</a></span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item active">Checkout</span>
+    </nav>
 
-<form asp-action="Checkout" method="post" class="row g-3">
-    <div class="col-md-6">
-        <label asp-for="CustomerName" class="form-label"></label>
-        <input asp-for="CustomerName" class="form-control" />
-        <span asp-validation-for="CustomerName" class="text-danger"></span>
-    </div>
-    <div class="col-md-6">
-        <label asp-for="CustomerEmail" class="form-label"></label>
-        <input asp-for="CustomerEmail" class="form-control" />
-        <span asp-validation-for="CustomerEmail" class="text-danger"></span>
-    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-premium">
+                <div class="text-center mb-4">
+                    <i class="bi bi-bag-check fs-1 text-primary mb-3 d-block"></i>
+                    <h1 class="h3 fw-bold">Secure Checkout</h1>
+                    <p class="text-muted">Enter your details to complete your order</p>
+                </div>
 
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary">Place Order</button>
-        <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">Back to Cart</a>
-    </div>
-</form>
+                <form asp-action="Checkout" method="post">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="CustomerName" class="form-label fw-semibold">
+                                    <i class="bi bi-person me-1"></i>Full Name
+                                </label>
+                                <input asp-for="CustomerName" class="form-control form-control-premium" placeholder="John Doe" />
+                                <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="CustomerEmail" class="form-label fw-semibold">
+                                    <i class="bi bi-envelope me-1"></i>Email Address
+                                </label>
+                                <input asp-for="CustomerEmail" class="form-control form-control-premium" placeholder="john@example.com" />
+                                <span asp-validation-for="CustomerEmail" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
 
-<partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+                    <hr class="my-4" />
+
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a class="btn-premium btn-outline-premium" asp-controller="Cart" asp-action="Index">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Cart
+                        </a>
+                        <button type="submit" class="btn-premium btn-primary-premium">
+                            <i class="bi bi-lock me-2"></i>Place Order
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 pt-4 border-top">
+                    <div class="d-flex justify-content-center gap-4 text-muted small">
+                        <span><i class="bi bi-shield-check me-1"></i>Secure Payment</span>
+                        <span><i class="bi bi-truck me-1"></i>Fast Delivery</span>
+                        <span><i class="bi bi-arrow-counterclockwise me-1"></i>Easy Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+}
+

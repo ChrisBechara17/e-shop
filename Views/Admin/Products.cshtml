@@ -1,0 +1,93 @@
+@model IEnumerable<EShopOnWeb.Models.Product>
+@{
+    ViewData["Title"] = "Product Management";
+}
+
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 fw-bold"><i class="bi bi-box-seam me-2"></i>Product Management</h1>
+            <p class="text-muted mb-0">Manage your product catalog and images</p>
+        </div>
+        <div class="d-flex gap-2">
+            <form asp-action="ApplyAIImages" method="post" class="d-inline">
+                <button type="submit" class="btn-premium btn-secondary-premium">
+                    <i class="bi bi-magic me-2"></i>Apply AI Images
+                </button>
+            </form>
+            <a asp-action="AddProduct" class="btn-premium btn-primary-premium">
+                <i class="bi bi-plus-lg me-2"></i>Add Product
+            </a>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Products Table -->
+    <div class="form-premium">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 80px;">Image</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@product.ImageUrl" alt="@product.Name" 
+                                     class="rounded" style="width: 60px; height: 60px; object-fit: cover;" />
+                            </td>
+                            <td>
+                                <strong>@product.Name</strong>
+                                @if (product.Description != null)
+                                {
+                                    <br /><small class="text-muted">@(product.Description.Length > 50 ? product.Description.Substring(0, 50) + "..." : product.Description)</small>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">@product.Category?.Name</span>
+                            </td>
+                            <td>
+                                <strong class="text-primary">@product.Price.ToString("C")</strong>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="EditProduct" asp-route-id="@product.Id" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i>Back to Shop
+        </a>
+    </div>
+</div>

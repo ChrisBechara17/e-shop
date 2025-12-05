@@ -1,40 +1,79 @@
 @model EShopOnWeb.Models.Order
 @{
-    ViewData["Title"] = "Order Details";
+    ViewData["Title"] = "Order Confirmed";
 }
 
-<h1>Order #@Model.Id</h1>
-<p class="text-muted">Placed on @Model.CreatedAt.ToLocalTime().ToString("f")</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Success Message -->
+            <div class="success-container mb-5">
+                <div class="success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                </div>
+                <h1 class="success-title">Order Confirmed!</h1>
+                <p class="success-text">Thank you for your purchase. Your order has been placed successfully.</p>
+            </div>
 
-<div class="mb-3">
-    <strong>Customer:</strong> @Model.CustomerName<br />
-    <strong>Email:</strong> @Model.CustomerEmail
+            <!-- Order Details Card -->
+            <div class="form-premium">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0"><i class="bi bi-receipt me-2"></i>Order #@Model.Id</h4>
+                    <span class="badge bg-success px-3 py-2">Confirmed</span>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded">
+                            <small class="text-muted d-block mb-1">Customer</small>
+                            <strong>@Model.CustomerName</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded">
+                            <small class="text-muted d-block mb-1">Email</small>
+                            <strong>@Model.CustomerEmail</strong>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-3 bg-light rounded">
+                            <small class="text-muted d-block mb-1">Order Date</small>
+                            <strong>@Model.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy 'at' h:mm tt")</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="fw-semibold mb-3">Order Items</h5>
+                <div class="cart-container mb-4">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="cart-item">
+                            <div class="cart-item-details flex-grow-1">
+                                <h6 class="cart-item-title mb-1">@item.Product?.Name</h6>
+                                <small class="text-muted">Qty: @item.Quantity × @item.UnitPrice.ToString("C")</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="cart-item-price">@((item.UnitPrice * item.Quantity).ToString("C"))</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="cart-summary-row total border-top pt-3">
+                    <span class="fw-bold">Total Paid</span>
+                    <span class="text-gradient fw-bold fs-4">@Model.TotalAmount.ToString("C")</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="text-center mt-4">
+                <a class="btn-premium btn-primary-premium" asp-controller="Products" asp-action="Index">
+                    <i class="bi bi-bag me-2"></i>Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="table-responsive">
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
-                <tr>
-                    <td>@item.Product?.Name</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.UnitPrice.ToString("C")</td>
-                    <td>@(item.UnitPrice * item.Quantity).ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<h4>Total: @Model.TotalAmount.ToString("C")</h4>
-
-<a class="btn btn-primary" asp-controller="Products" asp-action="Index">Keep Shopping</a>

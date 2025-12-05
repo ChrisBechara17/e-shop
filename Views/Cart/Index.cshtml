@@ -3,49 +3,103 @@
     ViewData["Title"] = "Your Cart";
 }
 
-<h1>Your Cart</h1>
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-premium mb-4">
+        <span class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item active">Shopping Cart</span>
+    </nav>
 
-@if (!Model.Items.Any())
-{
-    <div class="alert alert-info">Your cart is empty.</div>
-    <a class="btn btn-primary" asp-controller="Products" asp-action="Index">Continue Shopping</a>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Items)
-                {
-                    <tr>
-                        <td>@item.Product?.Name</td>
-                        <td>@item.Quantity</td>
-                        <td>@((item.Product?.Price ?? 0) * item.Quantity).ToString("C")</td>
-                        <td class="text-end">
-                            <form asp-action="Remove" method="post" class="d-inline">
-                                <input type="hidden" name="cartItemId" value="@item.Id" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    <h1 class="mb-4"><i class="bi bi-cart3 me-2"></i>Your Cart</h1>
 
-    <div class="d-flex justify-content-between align-items-center">
-        <h4>Total: @Model.Total.ToString("C")</h4>
-        <div class="d-flex gap-2">
-            <a class="btn btn-outline-secondary" asp-controller="Products" asp-action="Index">Continue Shopping</a>
-            <a class="btn btn-primary" asp-controller="Orders" asp-action="Checkout">Checkout</a>
+    @if (!Model.Items.Any())
+    {
+        <div class="empty-cart">
+            <div class="empty-cart-icon">
+                <i class="bi bi-cart-x"></i>
+            </div>
+            <h3 class="empty-cart-title">Your cart is empty</h3>
+            <p class="empty-cart-text">Looks like you haven't added any items to your cart yet.</p>
+            <a class="btn-premium btn-primary-premium" asp-controller="Products" asp-action="Index">
+                <i class="bi bi-bag me-2"></i>Start Shopping
+            </a>
         </div>
-    </div>
-}
+    }
+    else
+    {
+        <div class="row g-4">
+            <!-- Cart Items -->
+            <div class="col-lg-8">
+                <div class="cart-container">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="cart-item">
+                            <div class="cart-item-image">
+                                <img src="@item.Product?.ImageUrl" alt="@item.Product?.Name" />
+                            </div>
+                            <div class="cart-item-details flex-grow-1">
+                                <h5 class="cart-item-title">@item.Product?.Name</h5>
+                                <p class="cart-item-category text-muted small mb-2">@item.Product?.Category?.Name</p>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-muted">Qty: @item.Quantity</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="cart-item-price mb-2">
+                                    @(((item.Product?.Price ?? 0) * item.Quantity).ToString("C"))
+                                </div>
+                                <form asp-action="Remove" method="post" class="d-inline">
+                                    <input type="hidden" name="cartItemId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+                                        <i class="bi bi-trash"></i> Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="mt-3">
+                    <a asp-controller="Products" asp-action="Index" class="text-primary text-decoration-none">
+                        <i class="bi bi-arrow-left me-1"></i>Continue Shopping
+                    </a>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h5 class="fw-bold mb-4"><i class="bi bi-receipt me-2"></i>Order Summary</h5>
+                    
+                    <div class="cart-summary-row">
+                        <span class="text-muted">Subtotal (@Model.Items.Sum(i => i.Quantity) items)</span>
+                        <span>@Model.Total.ToString("C")</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span class="text-muted">Shipping</span>
+                        <span class="text-success">Free</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span class="text-muted">Tax</span>
+                        <span>$0.00</span>
+                    </div>
+                    <div class="cart-summary-row total">
+                        <span>Total</span>
+                        <span class="text-gradient">@Model.Total.ToString("C")</span>
+                    </div>
+
+                    <a class="btn-premium btn-primary-premium w-100 mt-4" asp-controller="Orders" asp-action="Checkout">
+                        <i class="bi bi-lock me-2"></i>Proceed to Checkout
+                    </a>
+
+                    <div class="mt-4 text-center">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check me-1"></i>Secure 256-bit SSL encryption
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

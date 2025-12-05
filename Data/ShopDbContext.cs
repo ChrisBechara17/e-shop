@@ -1,4 +1,5 @@
 using EShopOnWeb.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EShopOnWeb.Data;
@@ -6,7 +7,7 @@ namespace EShopOnWeb.Data;
 /// <summary>
 /// EF Core DbContext holding all e-commerce entities and relationships.
 /// </summary>
-public class ShopDbContext : DbContext
+public class ShopDbContext : IdentityDbContext<ApplicationUser>
 {
     public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
     {
@@ -20,6 +21,8 @@ public class ShopDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Product>(entity =>
         {
             entity.Property(p => p.Name).IsRequired().HasMaxLength(100);
