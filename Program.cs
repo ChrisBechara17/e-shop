@@ -10,6 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Use DATABASE_URL environment variable for production (Render), or SQLite for local dev
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
+// Force en-US culture for currency formatting ($)
+var cultureInfo = new System.Globalization.CultureInfo("en-US");
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
 if (!string.IsNullOrEmpty(databaseUrl))
 {
     // Convert Render's postgresql:// URI to Npgsql connection string format
