@@ -139,10 +139,10 @@ public class AdminController : Controller
     }
 
     /// <summary>
-    /// Creates a new product.
+    /// Creates a new product with optional image upload.
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> AddProduct(Product model)
+    public async Task<IActionResult> AddProduct(Product model, IFormFile? imageFile)
     {
         if (string.IsNullOrEmpty(model.Name))
         {
@@ -151,12 +151,39 @@ public class AdminController : Controller
             return View(model);
         }
 
+        // Default placeholder image
         model.ImageUrl = "https://via.placeholder.com/300x200?text=No+Image";
+        
         _context.Products.Add(model);
         await _context.SaveChangesAsync();
+        
+        // Handle image upload if provided
+        if (imageFile != null && imageFile.Length > 0)
+        {
+            try
+            {
+                var uploadsPath = Path.Combine(_environment.WebRootPath ?? "wwwroot", "uploads", "products");
+                Directory.CreateDirectory(uploadsPath);
 
-        TempData["Success"] = "Product created! Now upload an image.";
-        return RedirectToAction(nameof(EditProduct), new { id = model.Id });
+                var fileName = $"product_{model.Id}_{DateTime.Now.Ticks}{Path.GetExtension(imageFile.FileName)}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+
+                model.ImageUrl = $"/uploads/products/{fileName}";
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                TempData["Warning"] = $"Product created but image upload failed: {ex.Message}";
+            }
+        }
+
+        TempData["Success"] = "Product created successfully!";
+        return RedirectToAction(nameof(Products));
     }
 
     /// <summary>

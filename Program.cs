@@ -61,6 +61,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IPaymentService, StripePaymentService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IChatbotService, GeminiChatbotService>();
+builder.Services.AddScoped<IImageProcessingService, ImageProcessingService>();
 
 builder.Services.AddSession(options =>
 {
