@@ -46,10 +46,22 @@
                     </li>
                     @if (ViewBag.IsAdmin == true)
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Admin" asp-action="Products">
-                                <i class="bi bi-gear me-1"></i>Admin
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-shield-lock me-1"></i>Admin
                             </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Products">
+                                        <i class="bi bi-box-seam me-2"></i>Manage Products
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Orders">
+                                        <i class="bi bi-receipt-cutoff me-2"></i>Transactions
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     }
                 </ul>

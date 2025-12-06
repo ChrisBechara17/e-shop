@@ -41,6 +41,20 @@ public class AdminController : Controller
     }
 
     /// <summary>
+    /// Lists all orders (transactions).
+    /// </summary>
+    public async Task<IActionResult> Orders()
+    {
+        var orders = await _context.Orders
+            .Include(o => o.Items)
+            .ThenInclude(i => i.Product)
+            .OrderByDescending(o => o.CreatedAt)
+            .ToListAsync();
+            
+        return View(orders);
+    }
+
+    /// <summary>
     /// Shows the edit form for a product.
     /// </summary>
     [HttpGet]
