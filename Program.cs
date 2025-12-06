@@ -50,6 +50,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
 })
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ShopDbContext>()
 .AddDefaultTokenProviders();
 
@@ -79,6 +80,13 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
     await context.Database.EnsureCreatedAsync();
     await DbInitializer.SeedAsync(context);
+    
+    // Create Admin role if it doesn't exist
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
 }
 
 if (!app.Environment.IsDevelopment())

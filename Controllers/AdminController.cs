@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using EShopOnWeb.Data;
 using EShopOnWeb.Models;
 using EShopOnWeb.Services;
@@ -9,6 +10,7 @@ namespace EShopOnWeb.Controllers;
 /// <summary>
 /// Admin controller for managing products and processing images.
 /// </summary>
+[Authorize(Roles = "Admin")]
 public class AdminController : Controller
 {
     private readonly ShopDbContext _context;

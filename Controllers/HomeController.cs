@@ -14,6 +14,12 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
+        // Redirect unauthenticated users to login
+        if (User.Identity?.IsAuthenticated != true)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var featured = (await _productService.GetAllProductsAsync()).Take(4).ToList();
         return View(featured);
     }
